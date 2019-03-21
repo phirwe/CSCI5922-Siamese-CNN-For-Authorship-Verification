@@ -1,0 +1,6 @@
+[submodule "reference/Signature-verification-using-deep-learning"]
+	path = reference/Signature-verification-using-deep-learning
+	url = https://github.com/jadevaibhav/Signature-verification-using-deep-learning.git
+[submodule "reference/OfflineSignatureVerification"]
+	path = reference/OfflineSignatureVerification
+	url = https://github.com/Aftaab99/OfflineSignatureVerification.git
