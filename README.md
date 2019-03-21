@@ -11,9 +11,10 @@ References **(cloned in the references directory)**:
 	- [Repository](https://github.com/Aftaab99/OfflineSignatureVerification.git)
 
 - `Signature-verification-using-deep-learning` by `jadevaibhav` 
-- [Repository](https://github.com/jadevaibhav/Signature-verification-using-deep-learning.git)
+	- [Repository](https://github.com/jadevaibhav/Signature-verification-using-deep-learning.git)
 
 > NOTE: References to be added here
-
+> - When you want to add another git repo in yours (cloned), add it using the following git command:
+	- `git submodule add <repo-link> dir/repo-name`
 
 
