@@ -103,7 +103,7 @@ class ResnetSiamese(nn.Module):
         self.relu1 = nn.ReLU(inplace=True)
         self.dropout = nn.Dropout(p=0.5)
         self.fc2 = nn.Linear(fc_layers[0], fc_layers[1])
-        self.softmax = nn.Softmax(dim=0)
+        self.softmax = nn.Softmax(dim=1)
 
     def forward_once(self, x):
 
@@ -128,6 +128,7 @@ class ResnetSiamese(nn.Module):
         x = self.relu1(x)
         x = self.dropout(x)
         x = self.fc2(x)
+        print(x)
         x = self.softmax(x)
 
         return x
