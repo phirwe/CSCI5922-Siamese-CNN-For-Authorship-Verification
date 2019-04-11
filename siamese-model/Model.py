@@ -95,14 +95,14 @@ class TinyResNet(nn.Module):
 
 class ResnetSiamese(nn.Module):
 
-    def __init__(self, resnet_layers, resnet_outsize, fc_layers):
+    def __init__(self, resnet_layers, resnet_outsize, out_layers=2):
         super(ResnetSiamese, self).__init__()
 
         self.tinyresnet = TinyResNet(TinyResNetBlock, resnet_layers, num_classes=resnet_outsize)
-        self.fc1 = nn.Linear(resnet_outsize * 4, fc_layers[0])
-        self.relu1 = nn.ReLU(inplace=True)
-        self.dropout = nn.Dropout(p=0.5)
-        self.fc2 = nn.Linear(fc_layers[0], fc_layers[1])
+        self.fc1 = nn.Linear(resnet_outsize * 4, out_layers)
+        #self.relu1 = nn.ReLU(inplace=True)
+        #self.dropout = nn.Dropout(p=0.5)
+        #self.fc2 = nn.Linear(fc_layers[0], fc_layers[1])
         self.softmax = nn.Softmax(dim=1)
 
     def forward_once(self, x):
@@ -125,9 +125,9 @@ class ResnetSiamese(nn.Module):
 
         # Pass through fully connected layers
         x = self.fc1(x)
-        x = self.relu1(x)
-        x = self.dropout(x)
-        x = self.fc2(x)
+        #x = self.relu1(x)
+        #x = self.dropout(x)
+        #x = self.fc2(x)
         x = self.softmax(x)
 
         return x
