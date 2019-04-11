@@ -40,7 +40,7 @@ class TinyResNetBlock(nn.Module):
 
 class TinyResNet(nn.Module):
 
-    def __init__(self, block, layers, num_classes=10, input_channels=3):
+    def __init__(self, block, layers, num_classes=10, input_channels=1):
         super(TinyResNet, self).__init__()
         self.conv1 = nn.Conv2d(input_channels, 16, kernel_size=7, stride=1, padding=3, bias=False)
         self.bn1 = nn.BatchNorm2d(16)
@@ -128,7 +128,6 @@ class ResnetSiamese(nn.Module):
         x = self.relu1(x)
         x = self.dropout(x)
         x = self.fc2(x)
-        print(x)
         x = self.softmax(x)
 
         return x
