@@ -41,8 +41,10 @@ def show_image(image):
 class AuthorsDataset(Dataset):
 
     def __init__(self, positive, negative, root_dir, scale=0.75, threshold=170, cropped_size=1000):
-        self.positive_frame = pd.read_csv(positive,delimiter=' ',names=["filepath1","filepath2","label"])
-        self.negative_frame = pd.read_csv(negative,delimiter=' ',names=["filepath1","filepath2","label"])
+        pos_path = os.path.join(root_dir,positive)
+        neg_path = os.path.join(root_dir,negative)
+        self.positive_frame = pd.read_csv(pos_path,delimiter=' ',names=["filepath1","filepath2","label"])
+        self.negative_frame = pd.read_csv(neg_path,delimiter=' ',names=["filepath1","filepath2","label"])
         self.dataframe = pd.concat([self.positive_frame, self.negative_frame])
         self.root_dir = root_dir
         self.scale = scale
