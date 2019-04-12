@@ -11,7 +11,7 @@ device = torch.device("cuda:0")
 
 model = ResnetSiamese([1,1,1,1], 10)
 criterion = torch.nn.CrossEntropyLoss()
-optimizer = optim.SGD(model.parameters(), lr = 0.005, momentum=0.9)
+optimizer = optim.SGD(model.parameters(), lr = 0.001, momentum=0.9)
 
 #model.cuda()
 
