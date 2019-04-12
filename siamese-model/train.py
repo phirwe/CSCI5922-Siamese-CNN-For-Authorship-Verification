@@ -6,9 +6,14 @@ import numpy as np
 from Model import *
 import matplotlib.pyplot as plt
 
+torch.cuda.set_device(0)
+device = torch.device("cuda:0")
+
 model = ResnetSiamese([1,1,1,1], 10)
 criterion = torch.nn.CrossEntropyLoss()
-optimizer = optim.SGD(model.parameters(), lr = 0.01, momentum=0.9)
+optimizer = optim.SGD(model.parameters(), lr = 0.0001, momentum=0.9)
+
+#model.cuda()
 
 train_dataset = AuthorsDataset(
     root_dir='Dataset',
@@ -18,14 +23,15 @@ train_dataset = AuthorsDataset(
 
 train_loader = DataLoader(
     train_dataset,
-    batch_size=16,
-    num_workers=1,
+    batch_size=20,
     shuffle=True
 )
 
 for epoch in range(100):
 
     for batch_idx,(X1,X2,Y) in enumerate(train_loader):
+
+        #X1,X2,Y = X1.to(device),X2.to(device),Y.to(device)
 
         Y_hat = model.forward(X1,X2)
         loss = criterion(Y_hat, Y)

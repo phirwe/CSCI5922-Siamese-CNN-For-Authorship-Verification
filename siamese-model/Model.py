@@ -49,8 +49,8 @@ class TinyResNet(nn.Module):
         self.layer1 = self._make_layer(block, 16, layers[0])
         self.layer2 = self._make_layer(block, 32, layers[1], stride=2)
         self.layer3 = self._make_layer(block, 64, layers[2], stride=2)
-        self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
-        self.fc = nn.Linear(64 * block.expansion, num_classes)
+        #self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
+        self.fc = nn.Linear(64 * 16 * 63 * block.expansion, num_classes)
 
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
@@ -85,7 +85,7 @@ class TinyResNet(nn.Module):
         x = self.layer1(x)
         x = self.layer2(x)
         x = self.layer3(x)
-        x = self.avgpool(x)
+        #x = self.avgpool(x)
         x = x.view(x.size(0), -1)
 
         x = self.fc(x)
