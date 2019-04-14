@@ -106,7 +106,6 @@ class ResnetSiamese(nn.Module):
         self.softmax = nn.Softmax(dim=1)
 
     def forward_once(self, x):
-
         x = self.tinyresnet(x)
 
         return x
