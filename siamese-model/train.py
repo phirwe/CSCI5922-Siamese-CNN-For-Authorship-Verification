@@ -5,20 +5,20 @@ import torchvision
 import numpy as np
 from Model import *
 import matplotlib.pyplot as plt
+import os
 
 torch.cuda.set_device(0)
 device = torch.device("cuda:0")
 
 model = ResnetSiamese([1,1,1,1], 10)
 criterion = torch.nn.CrossEntropyLoss()
-optimizer = optim.SGD(model.parameters(), lr = 0.0001, momentum=0.9)
+optimizer = optim.Adam(model.parameters())
 
 #model.cuda()
 
 train_dataset = AuthorsDataset(
     root_dir='Dataset',
-    positive='positive.txt',
-    negative='negative.txt'
+    path='train.txt',
 )
 
 train_loader = DataLoader(
@@ -27,7 +27,7 @@ train_loader = DataLoader(
     shuffle=True
 )
 
-for epoch in range(100):
+for epoch in range(20):
 
     for batch_idx,(X1,X2,Y) in enumerate(train_loader):
 
@@ -40,4 +40,8 @@ for epoch in range(100):
         optimizer.step()
         optimizer.zero_grad()
 
-        print("EPOCH: %d\t BATCH: %d\tLOSS = %f"%(epoch,batch_idx,loss.item()))
+        print("EPOCH: %d\t BATCH: %d\tTRAIN LOSS = %f"%(epoch,batch_idx,loss.item()))
+
+    if epoch%5 == 0:
+        model_path = os.path.join('Model_Checkpoints',str(epoch))
+        torch.save(model.state_dict(), model_path)
