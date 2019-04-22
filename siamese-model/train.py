@@ -11,14 +11,13 @@ device = torch.device("cuda:0")
 
 model = ResnetSiamese([1,1,1,1], 10)
 criterion = torch.nn.CrossEntropyLoss()
-optimizer = optim.SGD(model.parameters(), lr = 0.0001, momentum=0.9)
+optimizer = optim.SGD(model.parameters(), lr = 0.001, momentum=0.9)
 
 #model.cuda()
 
 train_dataset = AuthorsDataset(
     root_dir='Dataset',
-    positive='positive.txt',
-    negative='negative.txt'
+    path='train.txt',
 )
 
 train_loader = DataLoader(
