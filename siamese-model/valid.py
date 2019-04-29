@@ -38,12 +38,12 @@ MAXHEIGHT = 337
 
 valid_dataset = AuthorsDataset(
     root_dir='Dataset',
-    path='valid_tiny.txt',
+    path='valid.txt',
     transform=transforms.Compose([
         Pad((MAXWIDTH, MAXHEIGHT)),
         Threshold(177),
-        Downsample(0.75),
         CropWidth(1000),
+        Downsample(0.75)
     ]))
 
 valid_loader = DataLoader(

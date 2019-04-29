@@ -26,13 +26,14 @@ if args.load_checkpoint:
     checkpoint_path = args.load_checkpoint
     checkpoint = torch.load(checkpoint_path)
     model.load_state_dict(checkpoint['state_dict'])
-    optimizer.load_state_dict(checkpoint['optimizer'])
+    #optimizer.load_state_dict(checkpoint['optimizer'])
 
 # Initialize cuda
 if args.cuda:
     torch.cuda.set_device(0)
     device = torch.device("cuda:0")
     model.cuda()
+    optimizer.cuda()
 
 # Constants from Authors100 dataset
 MAXWIDTH = 2260
@@ -40,12 +41,12 @@ MAXHEIGHT = 337
 
 train_dataset = AuthorsDataset(
     root_dir='Dataset',
-    path='train_tiny.txt',
+    path='train.txt',
     transform=transforms.Compose([
         Pad((MAXWIDTH, MAXHEIGHT)),
         Threshold(177),
-        Downsample(0.75),
         CropWidth(1000),
+        Downsample(0.75),
     ]))
 
 train_loader = DataLoader(
@@ -70,9 +71,9 @@ for epoch in range(args.epochs):
 
         print("EPOCH: %d\t BATCH: %d\tTRAIN LOSS = %f"%(epoch,batch_idx,loss.item()))
 
-    if epoch%5 == 0:
+    if epoch%1 == 0:
         checkpoint_path = os.path.join('Model_Checkpoints',"epoch" + str(epoch))
         checkpoint = {'state_dict': model.state_dict(),
-            'optimizer' : optimizer.state_dict()}
+                      'optimizer' : optimizer.state_dict()}
 
         torch.save(checkpoint, checkpoint_path)
