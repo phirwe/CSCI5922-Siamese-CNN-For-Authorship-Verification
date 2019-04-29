@@ -37,7 +37,6 @@ class AuthorsDataset(Dataset):
         return (img1, img2, label)
 
 
-
 class Threshold(object):
 
     def __init__(self, threshold_value):
