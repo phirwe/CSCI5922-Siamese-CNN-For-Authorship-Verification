@@ -33,7 +33,7 @@ if args.cuda:
     torch.cuda.set_device(0)
     device = torch.device("cuda:0")
     model.cuda()
-    optimizer.cuda()
+    #optimizer.cuda()
 
 # Constants from Authors100 dataset
 MAXWIDTH = 2260
