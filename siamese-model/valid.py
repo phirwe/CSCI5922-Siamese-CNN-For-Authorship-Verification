@@ -13,6 +13,27 @@ import argparse
 # Initialize model, loss and optimizer
 model = ResnetSiamese([1,1,1,1], 10)
 
+# Constants from Authors100 dataset
+MAXWIDTH = 2260
+MAXHEIGHT = 337
+
+# Load validation set
+valid_dataset = AuthorsDataset(
+    root_dir='Dataset',
+    path='valid.txt',
+    transform=transforms.Compose([
+        Pad((MAXWIDTH, MAXHEIGHT)),
+        Threshold(177),
+        ShiftAndCrop(700),
+        Downsample(0.75)
+    ]))
+
+valid_loader = DataLoader(
+    valid_dataset,
+    batch_size=1,
+    shuffle=True
+)
+
 # Parse command line flags
 parser = argparse.ArgumentParser()
 parser.add_argument("-c", "--cuda", action="store_true")
@@ -30,29 +51,6 @@ if args.cuda:
     torch.cuda.set_device(0)
     device = torch.device("cuda:0")
     model.cuda()
-
-# Constants from Authors100 dataset
-MAXWIDTH = 2260
-MAXHEIGHT = 337
-
-valid_dataset = AuthorsDataset(
-    root_dir='Dataset',
-    path='valid.txt',
-    transform=transforms.Compose([
-        Pad((MAXWIDTH, MAXHEIGHT)),
-        Threshold(177),
-        ShiftAndCrop(700),
-        Downsample(0.75)
-    ]))
-
-valid_loader = DataLoader(
-    valid_dataset,
-    batch_size=100,
-    shuffle=True
-)
-
-print("Validation Dataset size: %d examples"%(len(valid_dataset)))
-
 
 acc = 0
 false_pos = 0
@@ -72,7 +70,7 @@ for batch_idx,(X1,X2,Y) in enumerate(valid_loader):
     false_neg += (Y[Y_hat < Y]).sum().item()
 
 print("-----------------------------")
-print("VALIDATION ACCURACY: %f"%(acc/len(valid_dataset)))
-print("FALSE POSITIVE RATE: %f"%(false_pos/len(valid_dataset)))
-print("FALSE NEGATIVE RATE: %f"%(false_neg/len(valid_dataset)))
+print("VALIDATION ACCURACY: %f\t(%d of %d examples)"%(acc/len(valid_dataset),acc,len(valid_dataset)))
+print("FALSE POSITIVE RATE: %f\t(%d of %d examples)"%(false_pos/len(valid_dataset),acc,len(valid_dataset)))
+print("FALSE NEGATIVE RATE: %f\t(%d of %d examples)"%(false_neg/len(valid_dataset),acc,len(valid_dataset)))
 print("-----------------------------")
