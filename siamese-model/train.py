@@ -20,7 +20,7 @@ args = parser.parse_args()
 # Initialize model, loss and optimizer
 model = ResnetSiamese([1,1,1,1], 10)
 criterion = torch.nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.parameters(),lr=1e-5)
+optimizer = optim.Adam(model.parameters(),lr=1e-4)
 
 if args.load_checkpoint:
     checkpoint_path = args.load_checkpoint
@@ -41,17 +41,17 @@ MAXHEIGHT = 337
 
 train_dataset = AuthorsDataset(
     root_dir='Dataset',
-    path='train.txt',
+    path='train_tiny.txt',
     transform=transforms.Compose([
         Pad((MAXWIDTH, MAXHEIGHT)),
         Threshold(177),
-        CropWidth(1000),
+        ShiftAndCrop(700),
         Downsample(0.75),
     ]))
 
 train_loader = DataLoader(
     train_dataset,
-    batch_size=2,
+    batch_size=50,
     shuffle=True
 )
 
