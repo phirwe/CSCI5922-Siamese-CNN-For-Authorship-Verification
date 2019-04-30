@@ -42,7 +42,7 @@ valid_dataset = AuthorsDataset(
     transform=transforms.Compose([
         Pad((MAXWIDTH, MAXHEIGHT)),
         Threshold(177),
-        CropWidth(1000),
+        CropWidth(700),
         Downsample(0.75)
     ]))
 
