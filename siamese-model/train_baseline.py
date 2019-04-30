@@ -4,7 +4,7 @@ from torch import optim
 from torchvision import transforms
 import torchvision
 import numpy as np
-from Model import *
+from Model_Baseline import *
 import matplotlib.pyplot as plt
 import os
 import sys
@@ -83,7 +83,7 @@ for epoch in range(args.epochs):
         print("EPOCH: %d\t BATCH: %d\tTRAIN LOSS = %f"%(epoch,batch_idx,loss.item()))
 
     if epoch%5 == 0:
-        checkpoint_path = os.path.join('Model-Baseline_Checkpoints',"epoch" + str(epoch))
+        checkpoint_path = os.path.join('Model_Baseline_Checkpoints',"epoch" + str(epoch))
         checkpoint = {'state_dict': model.state_dict(),
             'optimizer' : optimizer.state_dict()}
 

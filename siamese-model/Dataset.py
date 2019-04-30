@@ -9,12 +9,99 @@ from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms, utils
 import math
 
-# Constants from Authors100 dataset
-MAXWIDTH = 2260
-MAXHEIGHT = 337
+class AuthorsDataset(Dataset):
+
+    def __init__(self, path, root_dir, transform=None):
+        data_path = os.path.join(root_dir,path)
+        self.dataframe = pd.read_csv(data_path,delimiter=' ',names=["filepath1","filepath2","label"])
+        self.root_dir = root_dir
+        self.transform = transform
+
+    def __len__(self):
+        return len(self.dataframe)
+
+    def __getitem__(self, idx):
+        img1_path = os.path.join(self.root_dir, self.dataframe.iloc[idx,0])
+        img2_path = os.path.join(self.root_dir, self.dataframe.iloc[idx,1])
+        label = self.dataframe.iloc[idx,2]
+
+        img1 = io.imread(img1_path)
+        img2 = io.imread(img2_path)
+
+        if self.transform:
+            (img1, img2) = self.transform((img1, img2))
+
+        img1 = torch.reshape(torch.from_numpy(img1),(1,img1.shape[0],img1.shape[1])).float()
+        img2 = torch.reshape(torch.from_numpy(img2),(1,img2.shape[0],img2.shape[1])).float()
+
+        return (img1, img2, label)
+
+
+class Threshold(object):
+
+    def __init__(self, threshold_value):
+        #assertTrue(0 < threshold_value < 255)
+        self.threshold_value = threshold_value
+
+    def __call__(self, sample):
+        img1, img2 = sample
+        img1[img1 > self.threshold_value] = 255
+        img2[img2 > self.threshold_value] = 255
+
+        return (img1, img2)
+
+class Downsample(object):
+
+    def __init__(self, scale_factor):
+        #assertTrue(0 < scale_factor < 1)
+        self.scale_factor = scale_factor
+
+    def __call__(self, sample):
+        img1, img2 = sample
+        img1 = transform.rescale(img1,self.scale_factor,multichannel=False)
+        img2 = transform.rescale(img2,self.scale_factor,multichannel=False)
+
+        return (img1, img2)
+
+class Pad(object):
+
+    def __init__(self, pad_size):
+        #self.assert
+        self.pad_x = pad_size[0]
+        self.pad_y = pad_size[1]
+
+    def __call__(self, sample):
+        img1, img2 = sample
+
+        y,x = img1.shape
+        x_diff,y_diff = self.pad_x-x,self.pad_y-y
+        top,bottom = math.ceil(y_diff/2.),math.floor(y_diff/2.)
+        right = x_diff
+        img1 = np.pad(img1,((top,bottom),(0,right)),'constant',constant_values=255)
+
+        y,x = img2.shape
+        x_diff,y_diff = self.pad_x-x,self.pad_y-y
+        top,bottom = math.ceil(y_diff/2.),math.floor(y_diff/2.)
+        right = x_diff
+        img2 = np.pad(img2,((top,bottom),(0,right)),'constant',constant_values=255)
+
+        return (img1, img2)
+
+class CropWidth(object):
+
+    def __init__(self, cropped_size):
+        #self.assert...
+        self.cropped_size = cropped_size
+
+    def __call__(self, sample):
+        img1, img2 = sample
+        img1 = img1[:,:self.cropped_size]
+        img2 = img2[:,:self.cropped_size]
+
+        return (img1, img2)
+
 
 ### UTILITY FUNCTIONS FOR DATA PREPROCESSING ###
-
 def pad(image):
     """Pad an image to the maximum image size in the dataset"""
     y,x = image.shape
@@ -37,38 +124,3 @@ def show_image(image):
     """Display image for testing"""
     plt.imshow(image,cmap='gray')
     plt.show()
-
-class AuthorsDataset(Dataset):
-
-    def __init__(self, positive, negative, root_dir, scale=0.75, threshold=170, cropped_size=1000):
-        pos_path = os.path.join(root_dir,positive)
-        neg_path = os.path.join(root_dir,negative)
-        self.positive_frame = pd.read_csv(pos_path,delimiter=' ',names=["filepath1","filepath2","label"])[:10]
-        self.negative_frame = pd.read_csv(neg_path,delimiter=' ',names=["filepath1","filepath2","label"])[:10]
-        print (len(self.positive_frame), len(self.negative_frame))
-        self.dataframe = pd.concat([self.positive_frame, self.negative_frame])
-        self.root_dir = root_dir
-        self.scale = scale
-        self.threshold = threshold
-        self.cropped_size = cropped_size
-
-    def __len__(self):
-        return len(self.dataframe)
-
-    def __getitem__(self, idx):
-        img1_path = os.path.join(self.root_dir, self.dataframe.iloc[idx,0])
-        img2_path = os.path.join(self.root_dir, self.dataframe.iloc[idx,1])
-        label = self.dataframe.iloc[idx,2]
-
-        img1 = io.imread(img1_path)
-        img2 = io.imread(img2_path)
-
-        img1 = crop(scale(threshold(pad(img1), self.threshold), self.scale), self.cropped_size)
-        img2 = crop(scale(threshold(pad(img2), self.threshold), self.scale), self.cropped_size)
-
-        img1 = torch.reshape(torch.from_numpy(img1),(1,img1.shape[0],img1.shape[1])).float()
-        img2 = torch.reshape(torch.from_numpy(img2),(1,img2.shape[0],img2.shape[1])).float()
-
-        #label = torch.Tensor(label).long()
-
-        return (img1, img2, label)
