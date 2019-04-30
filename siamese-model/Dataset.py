@@ -26,8 +26,8 @@ class AuthorsDataset(Dataset):
         img2_path = os.path.join(self.root_dir, self.dataframe.iloc[idx,1])
         label = self.dataframe.iloc[idx,2]
 
-        img1 = io.imread(img1_path)
-        img2 = io.imread(img2_path)
+        img1 = io.imread(img1_path, as_gray=True)
+        img2 = io.imread(img2_path, as_gray=True)
 
         if self.transform:
             (img1, img2) = self.transform((img1, img2))
@@ -92,17 +92,20 @@ class Pad(object):
 
 class ShiftAndCrop(object):
 
-    def __init__(self, cropped_size):
+    def __init__(self, cropped_size, random=False):
         #self.assert...
         self.cropped_size = cropped_size
         self.bound = 1000 - cropped_size
+        self.random = random
 
     def __call__(self, sample):
         img1, img2 = sample
-        rand1 = random.randint(0,self.bound)
-        rand2 = random.randint(0,self.bound)
-        img1 = img1[:,rand1:rand1+self.cropped_size]
-        img2 = img2[:,rand2:rand2+self.cropped_size]
+        shift1, shift2 = 0,0
+        if self.random:
+            shift1 = random.randint(0,self.bound)
+            shift2 = random.randint(0,self.bound)
+        img1 = img1[:,shift1:shift1+self.cropped_size]
+        img2 = img2[:,shift2:shift2+self.cropped_size]
 
         return (img1, img2)
 

@@ -71,6 +71,6 @@ for batch_idx,(X1,X2,Y) in enumerate(valid_loader):
 
 print("-----------------------------")
 print("VALIDATION ACCURACY: %f\t(%d of %d examples)"%(acc/len(valid_dataset),acc,len(valid_dataset)))
-print("FALSE POSITIVE RATE: %f\t(%d of %d examples)"%(false_pos/len(valid_dataset),acc,len(valid_dataset)))
-print("FALSE NEGATIVE RATE: %f\t(%d of %d examples)"%(false_neg/len(valid_dataset),acc,len(valid_dataset)))
+print("FALSE POSITIVE RATE: %f\t(%d of %d examples)"%(false_pos/len(valid_dataset),false_pos,len(valid_dataset)))
+print("FALSE NEGATIVE RATE: %f\t(%d of %d examples)"%(false_neg/len(valid_dataset),false_neg,len(valid_dataset)))
 print("-----------------------------")
