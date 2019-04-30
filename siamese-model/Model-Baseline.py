@@ -92,33 +92,33 @@ class BaselineSiamese(nn.Module):
         return x
     
 
-model = BaselineSiamese()
-criterion = torch.nn.CrossEntropyLoss()
-optimizer = optim.SGD(model.parameters(), lr = 0.01, momentum=0.9)
+# model = BaselineSiamese()
+# criterion = torch.nn.CrossEntropyLoss()
+# optimizer = optim.SGD(model.parameters(), lr = 0.01, momentum=0.9)
 
-train_dataset = AuthorsDataset(
-    root_dir='Dataset',
-    positive='positive.txt',
-    negative='negative.txt'
-)
+# train_dataset = AuthorsDataset(
+#     root_dir='Dataset',
+#     positive='positive.txt',
+#     negative='negative.txt'
+# )
 
-train_loader = DataLoader(
-    train_dataset,
-    batch_size=16,
-    num_workers=1,
-    shuffle=True
-)
+# train_loader = DataLoader(
+#     train_dataset,
+#     batch_size=16,
+#     num_workers=1,
+#     shuffle=True
+# )
 
-for epoch in range(1):
+# for epoch in range(1):
 
-    for batch_idx,(X1,X2,Y) in enumerate(train_loader):
+#     for batch_idx,(X1,X2,Y) in enumerate(train_loader):
 
-        Y_hat = model.forward(X1,X2)
+#         Y_hat = model.forward(X1,X2)
         
-        loss = criterion(Y_hat, Y)
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-        optimizer.zero_grad()
+#         loss = criterion(Y_hat, Y)
+#         optimizer.zero_grad()
+#         loss.backward()
+#         optimizer.step()
+#         optimizer.zero_grad()
 
-        print("EPOCH: %d\t BATCH: %d\tLOSS = %f"%(epoch,batch_idx,loss.item()))
+#         print("EPOCH: %d\t BATCH: %d\tLOSS = %f"%(epoch,batch_idx,loss.item()))
