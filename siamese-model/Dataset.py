@@ -32,8 +32,6 @@ class AuthorsDataset(Dataset):
         if self.transform:
             (img1, img2) = self.transform((img1, img2))
 
-        show_image(img1,img2)
-
         img1 = torch.reshape(torch.from_numpy(img1),(1,img1.shape[0],img1.shape[1])).float()
         img2 = torch.reshape(torch.from_numpy(img2),(1,img2.shape[0],img2.shape[1])).float()
 
