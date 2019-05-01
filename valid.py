@@ -10,38 +10,33 @@ import os
 import sys
 import argparse
 
-# Initialize model, loss and optimizer
-model = ResnetSiamese([1,1,1,1], 10)
+""" -----------------------SET HYPERPARAMETERS------------------------------ """
+# Data Preprocessing
+THRESHOLD_VALUE = 177
+CROP_SIZE       = 700
+RANDOM_CROP     = True
+DOWNSAMPLE_RATE = 0.75
 
-# Constants from Authors100 dataset
-MAXWIDTH = 2260
-MAXHEIGHT = 337
-
-# Load validation set
-valid_dataset = AuthorsDataset(
-    root_dir='Dataset',
-    path='valid.txt',
-    transform=transforms.Compose([
-        Pad((MAXWIDTH, MAXHEIGHT)),
-        Threshold(177),
-        ShiftAndCrop(700),
-        Downsample(0.75)
-    ]))
-
-valid_loader = DataLoader(
-    valid_dataset,
-    batch_size=1,
-    shuffle=True
-)
+# Model Parameters NOTE: Modify at your own risk! Changes may be required to Model.py
+RESNET_LAYERS   = [1,1,1,1]
+RESNET_OUTSIZE  = 10
+""" ------------------------------------------------------------------------ """
 
 # Parse command line flags
 parser = argparse.ArgumentParser()
+parser.add_argument("data_path", type=str)
+parser.add_argument("checkpoint", type=str)
 parser.add_argument("-c", "--cuda", action="store_true")
-parser.add_argument("--load_checkpoint", type=str, default=None)
+parser.add_argument("-e", "--epochs", type=int, default=20)
 args = parser.parse_args()
 
-if args.load_checkpoint:
-    checkpoint_path = args.load_checkpoint
+# Initialize model, loss and optimizer
+model = ResnetSiamese(RESNET_LAYERS, RESNET_OUTSIZE)
+criterion = torch.nn.CrossEntropyLoss()
+
+# Load model checkpoint
+if args.checkpoint:
+    checkpoint_path = args.checkpoint
     checkpoint = torch.load(checkpoint_path)
     model.load_state_dict(checkpoint['state_dict'])
     model.eval()
@@ -51,6 +46,26 @@ if args.cuda:
     torch.cuda.set_device(0)
     device = torch.device("cuda:0")
     model.cuda()
+
+# Constants from Authors100 dataset
+MAXWIDTH = 2260
+MAXHEIGHT = 337
+
+valid_dataset = AuthorsDataset(
+    root_dir='Dataset',
+    path=args.data_path,
+    transform=transforms.Compose([
+        Pad((MAXWIDTH, MAXHEIGHT)),
+        Threshold(THRESHOLD_VALUE),
+        ShiftAndCrop(CROP_SIZE, random=RANDOM_CROP),
+        Downsample(DOWNSAMPLE_RATE),
+    ]))
+
+valid_loader = DataLoader(
+    valid_dataset,
+    batch_size=10,
+    shuffle=True
+)
 
 acc = 0
 false_pos = 0
