@@ -12,7 +12,20 @@ import random
 import unittest
 
 class AuthorsDataset(Dataset):
+    """
+    Implements the Authors100 dataset. Dataset is structured in pairs of images
+    with a label 1 or 0 corresponding to whether the pair is by the same author
+    or not respectively.
 
+    Args:
+        path (str):        path to file with listings of pairs/labels
+        root_dir (str):    root directory of dataset
+        transform (torchvision.transforms): transformations to be performed
+
+    Returns:
+        (tensor, tensor, bool):     processed pair of images and label for
+                                    training/validation
+    """
     def __init__(self, path, root_dir, transform=None):
         data_path = os.path.join(root_dir,path)
         self.dataframe = pd.read_csv(data_path,delimiter=' ',names=["filepath1","filepath2","label"])
