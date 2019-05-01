@@ -4,7 +4,7 @@ from torch import optim
 from torchvision import transforms
 import torchvision
 import numpy as np
-from Model_Baseline import *
+from Model import *
 import matplotlib.pyplot as plt
 import os
 import sys
