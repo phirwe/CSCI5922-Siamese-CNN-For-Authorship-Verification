@@ -23,7 +23,7 @@ valid_dataset = AuthorsDataset(
     path='test.txt',
     transform=transforms.Compose([
         Pad((MAXWIDTH, MAXHEIGHT)),
-        Threshold(177),
+        Threshold(250),
         ShiftAndCrop(700),
         Downsample(0.75)
     ]))

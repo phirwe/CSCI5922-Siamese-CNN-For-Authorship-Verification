@@ -2,3 +2,5 @@
 ./test_images/jack1.png ./test_images/kenzie1.png 0
 ./test_images/kenzie1.png ./test_images/kenzie2.png 1
 ./test_images/jack2.png ./test_images/kenzie2.png 0
+./test_images/jack2.png ./test_images/poorwa2.png 0
+./test_images/poorwa1.png ./test_images/poorwa2.png 0
