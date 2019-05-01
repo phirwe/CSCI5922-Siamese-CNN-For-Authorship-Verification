@@ -38,21 +38,9 @@ if args.cuda:
 MAXWIDTH = 2260
 MAXHEIGHT = 337
 
-# train_dataset = AuthorsDataset(
-#     root_dir='Dataset',
-#     path='train_tiny.txt'
-# )
-
-# train_loader = DataLoader(
-#     train_dataset,
-#     batch_size=16,
-#     num_workers=1,
-#     shuffle=True
-# )
-
 train_dataset = AuthorsDataset(
     root_dir='Dataset',
-    path='train_tiny.txt',
+    path='train.txt',
     transform=transforms.Compose([
         Pad((MAXWIDTH, MAXHEIGHT)),
         Threshold(177),
@@ -62,7 +50,7 @@ train_dataset = AuthorsDataset(
 
 train_loader = DataLoader(
     train_dataset,
-    batch_size=2,
+    batch_size=20,
     shuffle=True
 )
 
