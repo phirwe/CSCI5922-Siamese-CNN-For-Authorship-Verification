@@ -11,23 +11,40 @@ import sys
 import argparse
 from datetime import datetime
 
+""" -----------------------SET HYPERPARAMETERS------------------------------ """
+# Training Parameters
+LEARNING_RATE   = 2e-5
+BATCH_SIZE      = 50
+
+# Data Preprocessing
+THRESHOLD_VALUE = 177
+CROP_SIZE       = 700
+RANDOM_CROP     = True
+DOWNSAMPLE_RATE = 0.75
+
+# Model Parameters NOTE: Modify at your own risk! Changes may be required to Model.py
+RESNET_LAYERS   = [1,1,1,1]
+RESNET_OUTSIZE  = 10
+""" ------------------------------------------------------------------------ """
+
 # Parse command line flags
 parser = argparse.ArgumentParser()
+parser.add_argument("data_path", type=str)
 parser.add_argument("-c", "--cuda", action="store_true")
 parser.add_argument("-e", "--epochs", type=int, default=20)
 parser.add_argument("--load_checkpoint", type=str, default=None)
 args = parser.parse_args()
 
 # Initialize model, loss and optimizer
-model = ResnetSiamese([1,1,1,1], 10)
+model = ResnetSiamese(RESNET_LAYERS, RESNET_OUTSIZE)
 criterion = torch.nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.parameters(),lr=1e-4)
+optimizer = optim.Adam(model.parameters(),lr=LEARNING_RATE)
 
+# Load model checkpoint
 if args.load_checkpoint:
     checkpoint_path = args.load_checkpoint
     checkpoint = torch.load(checkpoint_path)
     model.load_state_dict(checkpoint['state_dict'])
-    #optimizer.load_state_dict(checkpoint['optimizer'])
 
 # Initialize cuda
 if args.cuda:
@@ -42,17 +59,17 @@ MAXHEIGHT = 337
 
 train_dataset = AuthorsDataset(
     root_dir='Dataset',
-    path='train.txt',
+    path=args.data_path,
     transform=transforms.Compose([
         Pad((MAXWIDTH, MAXHEIGHT)),
-        Threshold(177),
-        ShiftAndCrop(700, random=True),
-        Downsample(0.75),
+        Threshold(THRESHOLD_VALUE),
+        ShiftAndCrop(CROP_SIZE, random=RANDOM_CROP),
+        Downsample(DOWNSAMPLE_RATE),
     ]))
 
 train_loader = DataLoader(
     train_dataset,
-    batch_size=50,
+    batch_size=BATCH_SIZE,
     shuffle=True
 )
 
