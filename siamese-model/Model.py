@@ -7,6 +7,10 @@ def conv1x1(in_planes, out_planes, stride=1):
     return nn.Conv2d(in_planes, out_planes, kernel_size=1, stride=stride, bias=False)
 
 class TinyResNetBlock(nn.Module):
+    """
+    Implements one unit of the "tiny Resnet" described in
+    http://cs231n.stanford.edu/reports/2017/pdfs/801.pdf
+    """
     expansion = 1
 
     def __init__(self, in_channels, out_channels, stride=1, downsample=None, kernel_size=3):
@@ -39,6 +43,19 @@ class TinyResNetBlock(nn.Module):
         return out
 
 class TinyResNet(nn.Module):
+    """
+    Implements the 'Tiny Resnet' described in
+    http://cs231n.stanford.edu/reports/2017/pdfs/801.pdf
+
+    Architecture:
+        Conv2D
+        Batch Norm
+        ReLU
+        TinyResnet Block
+        TinyResnet Block
+        TinyResnte Block
+        Fully Connected
+    """
 
     def __init__(self, block, layers, num_classes=10, input_channels=1):
         super(TinyResNet, self).__init__()
@@ -49,8 +66,7 @@ class TinyResNet(nn.Module):
         self.layer1 = self._make_layer(block, 16, layers[0])
         self.layer2 = self._make_layer(block, 32, layers[1], stride=2)
         self.layer3 = self._make_layer(block, 64, layers[2], stride=2)
-        #self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
-        self.fc = nn.Linear(64 * 16 * 63 * block.expansion, num_classes)
+        self.fc = nn.Linear(64 * 16 * 33 * block.expansion, num_classes)
 
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
@@ -85,7 +101,6 @@ class TinyResNet(nn.Module):
         x = self.layer1(x)
         x = self.layer2(x)
         x = self.layer3(x)
-        #x = self.avgpool(x)
         x = x.view(x.size(0), -1)
 
         x = self.fc(x)
@@ -94,6 +109,11 @@ class TinyResNet(nn.Module):
 
 
 class ResnetSiamese(nn.Module):
+    """
+    Implements siamese neural network consisting of two 'Tiny Resnet' branches. Outputs from
+    the Tiny Resnets are concatenated, then passed through a fully connected layer and finally
+    to a softmax operation.
+    """
 
     def __init__(self, resnet_layers, resnet_outsize, out_layers=2):
         super(ResnetSiamese, self).__init__()
