@@ -8,7 +8,7 @@ import random
 
 Utility script for randomly creating positive and negative pairs of images
 from the Authors100 dataset. Script will generate an equal number
-(DATASET_SIZE of positive and negative examples, and put them in training
+of positive and negative examples, and put them in training
 and validation files according to TRAIN_TEST_SPLIT
 
 """
@@ -27,7 +27,7 @@ author_ids = []
 for i in range(len(author_paths)):
     author_ids.append(author_paths[i][-3:])
 
-train_size = int(DATASET_SIZE * TRAIN_TEST_SPLIT)
+train_size = int((DATASET_SIZE/2) * TRAIN_TEST_SPLIT)
 valid_size = DATASET_SIZE - train_size
 idx1,idx2 = 0,0
 pos_id = 0
@@ -36,7 +36,7 @@ poslabel = 1
 neglabel = 0
 
 # Generate training and valid sets
-for i in range(DATASET_SIZE):
+for i in range(int(DATASET_SIZE/2)):
 
     # Randomly get author IDs for positive and negative pairs
     pos_id = author_paths[random.randint(0,99)]
