@@ -4,7 +4,7 @@ from torch import optim
 from torchvision import transforms
 import torchvision
 import numpy as np
-from Model import *
+from ResnetSiamese import *
 import matplotlib.pyplot as plt
 import os
 import sys
@@ -78,6 +78,7 @@ for epoch in range(args.epochs):
 
         print("EPOCH: %d\t BATCH: %d\tTRAIN LOSS = %f"%(epoch,batch_idx,loss.item()))
 
+    # Save checkpoint
     now = datetime.now()
     checkpoint_str = now.strftime("%m-%d-%Y_%H:%M:%S") + "_epoch" + str(epoch)
     checkpoint_path = os.path.join('Model_Checkpoints', checkpoint_str)
