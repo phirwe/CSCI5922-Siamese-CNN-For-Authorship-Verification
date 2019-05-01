@@ -1,5 +1,5 @@
 from torch.utils.data import DataLoader
-from Dataset import *
+from AuthorsDataset import *
 from torch import optim
 from torchvision import transforms
 import torchvision
