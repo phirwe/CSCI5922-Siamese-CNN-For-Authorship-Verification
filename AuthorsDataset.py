@@ -27,7 +27,7 @@ class AuthorsDataset(Dataset):
                                     training/validation
     """
     def __init__(self, path, root_dir, transform=None):
-        data_path = os.path.join(root_dir,path)
+        data_path = path
         self.dataframe = pd.read_csv(data_path,delimiter=' ',names=["filepath1","filepath2","label"])
         self.root_dir = root_dir
         self.transform = transform
