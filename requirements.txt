@@ -1,0 +1,11 @@
+torch
+torchvision
+dominate
+visdom
+scikit-image
+glob3
+pandas
+numpy
+matplotlib
+argparse
+datetime
