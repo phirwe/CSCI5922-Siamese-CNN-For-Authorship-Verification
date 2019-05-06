@@ -1,6 +1,6 @@
 from torch.utils.data import DataLoader
 from Dataset import *
-from torch import optim
+from torch import optim, norm
 from torchvision import transforms
 import torchvision
 import numpy as np
@@ -12,6 +12,7 @@ import argparse
 
 # Parse command line flags
 parser = argparse.ArgumentParser()
+parser.add_argument("data_path", typr=str)
 parser.add_argument("-c", "--cuda", action="store_true")
 parser.add_argument("-e", "--epochs", type=int, default=50)
 parser.add_argument("--load_checkpoint", type=str, default=None)
@@ -40,17 +41,17 @@ MAXHEIGHT = 337
 
 train_dataset = AuthorsDataset(
     root_dir='Dataset',
-    path='train.txt',
+    path=args.data_path,
     transform=transforms.Compose([
         Pad((MAXWIDTH, MAXHEIGHT)),
         Threshold(177),
+        ShiftAndCrop(700, random=True),
         Downsample(0.75),
-        CropWidth(1000),
     ]))
 
 train_loader = DataLoader(
     train_dataset,
-    batch_size=20,
+    batch_size=50,
     shuffle=True
 )
 
@@ -58,18 +59,32 @@ for epoch in range(args.epochs):
 
     for batch_idx,(X1,X2,Y) in enumerate(train_loader):
 
+        l2_reg = torch.tensor(0.)
+        
+        # Move data to GPU
         if args.cuda:
             X1,X2,Y = X1.to(device),X2.to(device),Y.to(device)
+            l2_reg = l2_reg.to(device)
 
+        # Apply Forward pass on input pairs
         Y_hat = model.forward(X1,X2)
+        
+        # Calculate loss on training data
         loss = criterion(Y_hat, Y)
-        optimizer.zero_grad()
+       
+        # Apply L2 regularization on model weight parameters
+        for param in model.parameters():
+            l2_reg += norm(param)
+        loss += 0.001*l2_reg
+        
+        # Back propagate the loss and apply zero grad
         loss.backward()
         optimizer.step()
         optimizer.zero_grad()
 
         print("EPOCH: %d\t BATCH: %d\tTRAIN LOSS = %f"%(epoch,batch_idx,loss.item()))
 
+    # Save model checkpoints
     if epoch%5 == 0:
         checkpoint_path = os.path.join('Model_Baseline_Checkpoints',"epoch" + str(epoch))
         checkpoint = {'state_dict': model.state_dict(),
