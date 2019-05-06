@@ -14,7 +14,11 @@ To get started training and testing the network yourself right away, jump to the
 
 ## Network Architecture
 
-## Dataset and Preprocessing
+## Dataset
+
+### IAM handwriting dataset
+
+### Data Preprocessing
 
 ## Results
 
