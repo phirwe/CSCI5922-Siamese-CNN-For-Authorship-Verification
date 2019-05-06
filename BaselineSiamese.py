@@ -88,7 +88,7 @@ class BaselineSiamese(nn.Module):
         super(BaselineSiamese, self).__init__()
 
         self.baselineNet = BaselineNet()
-        self.fc = nn.Linear(800, out_layers)
+        self.fc = nn.Linear(800, 10)
         self.softmax = nn.Softmax(dim=1)
 
     def forward_once(self, x):
