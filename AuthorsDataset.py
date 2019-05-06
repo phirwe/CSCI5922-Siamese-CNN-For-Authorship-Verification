@@ -44,8 +44,6 @@ class AuthorsDataset(Dataset):
         # Read images from dataset
         img1 = io.imread(img1_path)
         img2 = io.imread(img2_path)
-        print (img1.shape)
-        print (img2.shape)
         # Apply transformations
         if self.transform:
             (img1, img2) = self.transform((img1, img2))

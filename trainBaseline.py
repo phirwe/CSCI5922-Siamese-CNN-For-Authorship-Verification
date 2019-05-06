@@ -1,5 +1,4 @@
 from torch.utils.data import DataLoader
-<<<<<<< HEAD
 import os
 import sys
 #sys.path.append('../')
@@ -9,14 +8,14 @@ from torchvision import transforms
 import torchvision
 from torch import norm
 import numpy as np
-from Model import *
+from BaselineSiamese import *
 import matplotlib.pyplot as plt
 import argparse
 from datetime import datetime
 
 # Parse command line flags
 parser = argparse.ArgumentParser()
-parser.add_argument("data_path", typr=str)
+parser.add_argument("data_path", type=str)
 parser.add_argument("-c", "--cuda", action="store_true")
 parser.add_argument("-e", "--epochs", type=int, default=20)
 parser.add_argument("--load_checkpoint", type=str, default=None)
@@ -56,11 +55,7 @@ train_dataset = AuthorsDataset(
 
 train_loader = DataLoader(
     train_dataset,
-<<<<<<< HEAD
     batch_size=10,
-=======
-    batch_size=50,
->>>>>>> 0873334f314c023f538a3cc246d6de01d85e1cc6
     shuffle=True
 )
 
@@ -75,7 +70,6 @@ for epoch in range(args.epochs):
         # Move data to GPU
         if args.cuda:
             X1,X2,Y = X1.to(device),X2.to(device),Y.to(device)
-            l2_reg = l2_reg.to(device)
 
         # Compute forward pass
         Y_hat = model.forward(X1,X2)
