@@ -1,4 +1,31 @@
-# README
+# Siamese Convolutional Neural Networks for Authorship Verification
+
+This project is meant to provide a reference implementation of the siamese network architecture described [in this paper](http://cs231n.stanford.edu/reports/2017/pdfs/801.pdf), as well as provide a novel re-organizing and pre-processing method for the [IAM handwriting dataset](http://www.fki.inf.unibe.ch/databases/iam-handwriting-database). It was was completed as the final project for CU Boulder CSCI 5922: Neural Networks and Deep Learning.
+
+Project Collaborators:
+- Lawrence Hessburg (lawrence.hessburgiv@colorado.edu)
+- Poorwa Hirve (poorwa.hirve@colorado.edu)
+- Prathyusha Gayam (prathyusha.gayam@colorado.edu)
+- Payoj Jain (payoj.jain@colorado.edu)
+
+To get started training and testing the network yourself, jump to the [How to run](#how-to-run) section
+
+## Overview
+
+## Network Architecture
+
+## Dataset and Preprocessing
+
+## Results
+
+## How to run
+
+### Prerequisites
+
+### Training
+
+### Validation
+
 
 We are a group of 4 students studying in the University of Colorado, Boulder for CSCI 5922: Neural Networks and Deep Learning.
 
