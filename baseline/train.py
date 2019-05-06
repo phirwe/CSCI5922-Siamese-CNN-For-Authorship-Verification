@@ -20,7 +20,7 @@ args = parser.parse_args()
 # Initialize model, loss and optimizer
 model = BaselineSiamese()
 criterion = torch.nn.CrossEntropyLoss()
-optimizer = optim.SGD(model.parameters(), lr = 0.01, momentum=0.9)
+optimizer = optim.Adam(model.parameters(), lr = 0.01, momentum=0.9)
 
 if args.load_checkpoint:
     checkpoint_path = args.load_checkpoint
