@@ -14,6 +14,22 @@ import matplotlib.pyplot as plt
 
 class BaselineNet(nn.Module):
 
+    """
+    Baseline Siamese Network described in the paper - http://cs231n.stanford.edu/reports/2017/pdfs/801.pdf
+    
+    Architecture Layout:
+        Conv2D - 32 filters
+        ReLU
+        MaxPool 2x2
+        Conv2D - 64 filters
+        ReLU
+        MaxPool 2x2
+        Conv2D - 64 filters
+        ReLU
+        Fully Connected
+        Dropout
+        Fully Connected
+    """
     def __init__(self, input_channels=1):
         super(BaselineNet, self).__init__()
         
@@ -58,7 +74,13 @@ class BaselineNet(nn.Module):
 
 
 class BaselineSiamese(nn.Module):
-
+    
+    """
+    Implements Baseline siamese network which has few layers and large kernels. 
+    Encodings of the image pairs are concatenated, then passed through a fully connected layer 
+    and a softmax operation is applied.
+    """
+    
     def __init__(self, out_layers=2):
         super(BaselineSiamese, self).__init__()
 
