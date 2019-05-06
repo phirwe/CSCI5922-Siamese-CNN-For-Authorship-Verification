@@ -1,4 +1,5 @@
 from torch.utils.data import DataLoader
+<<<<<<< HEAD
 import os
 import sys
 #sys.path.append('../')
@@ -15,7 +16,7 @@ from datetime import datetime
 
 # Parse command line flags
 parser = argparse.ArgumentParser()
-parser.add_argument("data_path", type=str)
+parser.add_argument("data_path", typr=str)
 parser.add_argument("-c", "--cuda", action="store_true")
 parser.add_argument("-e", "--epochs", type=int, default=20)
 parser.add_argument("--load_checkpoint", type=str, default=None)
@@ -55,7 +56,11 @@ train_dataset = AuthorsDataset(
 
 train_loader = DataLoader(
     train_dataset,
+<<<<<<< HEAD
     batch_size=10,
+=======
+    batch_size=50,
+>>>>>>> 0873334f314c023f538a3cc246d6de01d85e1cc6
     shuffle=True
 )
 
@@ -66,20 +71,25 @@ for epoch in range(args.epochs):
     for batch_idx,(X1,X2,Y) in enumerate(train_loader):
 
         # Move batch to GPU
+        
+        # Move data to GPU
         if args.cuda:
             X1,X2,Y = X1.to(device),X2.to(device),Y.to(device)
+            l2_reg = l2_reg.to(device)
 
         # Compute forward pass
         Y_hat = model.forward(X1,X2)
 
-        # Calculate training loss
-        loss = criterion(Y_hat, Y)
-        l2_reg = torch.tensor(0.).to(device)
-        for temp in model.parameters():
-            l2_reg += norm(temp)
 
         # Perform backprop and zero gradient
-        # optimizer.zero_grad()
+        optimizer.zero_grad()
+        # Apply Forward pass on input pairs
+        Y_hat = model.forward(X1,X2)
+        
+        # Calculate loss on training data
+        loss = criterion(Y_hat, Y)
+       
+        # Back propagate the loss and apply zero grad
         loss.backward()
         optimizer.step()
         optimizer.zero_grad()
@@ -88,15 +98,11 @@ for epoch in range(args.epochs):
     file_.write(str(loss.item())+"\n")        
 
     print (sum(batch_loss) / len(batch_loss))
-    #:wq
-    #for param in model.parameters():
-        #print (param)
-    # Save checkpoint
-    now = datetime.now()
-    checkpoint_str = "_epoch" + str(epoch)
-    checkpoint_path = os.path.join('Model_Baseline_Checkpoints', checkpoint_str)
-    checkpoint = {'state_dict': model.state_dict(),
-                  'optimizer' : optimizer.state_dict()}
+    # Save model checkpoints
+    if epoch%5 == 0:
+        checkpoint_path = os.path.join('Model_Baseline_Checkpoints',"epoch" + str(epoch))
+        checkpoint = {'state_dict': model.state_dict(),
+            'optimizer' : optimizer.state_dict()}
 
-    torch.save(checkpoint, checkpoint_path)
+        torch.save(checkpoint, checkpoint_path)
 
