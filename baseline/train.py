@@ -1,26 +1,31 @@
 from torch.utils.data import DataLoader
-from Dataset import *
+import os
+import sys
+#sys.path.append('../')
+from AuthorsDataset import *
 from torch import optim
 from torchvision import transforms
 import torchvision
+from torch import norm
 import numpy as np
 from Model import *
 import matplotlib.pyplot as plt
-import os
-import sys
 import argparse
+from datetime import datetime
 
 # Parse command line flags
 parser = argparse.ArgumentParser()
+parser.add_argument("data_path", type=str)
 parser.add_argument("-c", "--cuda", action="store_true")
-parser.add_argument("-e", "--epochs", type=int, default=50)
+parser.add_argument("-e", "--epochs", type=int, default=20)
 parser.add_argument("--load_checkpoint", type=str, default=None)
 args = parser.parse_args()
 
 # Initialize model, loss and optimizer
 model = BaselineSiamese()
 criterion = torch.nn.CrossEntropyLoss()
-optimizer = optim.SGD(model.parameters(), lr = 0.01, momentum=0.9)
+#optimizer = optim.SGD(model.parameters(), lr = 2e-5)
+optimizer = optim.Adam(model.parameters())
 
 if args.load_checkpoint:
     checkpoint_path = args.load_checkpoint
@@ -40,40 +45,58 @@ MAXHEIGHT = 337
 
 train_dataset = AuthorsDataset(
     root_dir='Dataset',
-    path='train.txt',
+    path=args.data_path,
     transform=transforms.Compose([
         Pad((MAXWIDTH, MAXHEIGHT)),
         Threshold(177),
+        ShiftAndCrop(700, random=True),
         Downsample(0.75),
-        CropWidth(1000),
     ]))
 
 train_loader = DataLoader(
     train_dataset,
-    batch_size=20,
+    batch_size=10,
     shuffle=True
 )
 
-for epoch in range(args.epochs):
+file_ = open("loss_50000.txt", "a")
 
+for epoch in range(args.epochs):
+    batch_loss = []
     for batch_idx,(X1,X2,Y) in enumerate(train_loader):
 
+        # Move batch to GPU
         if args.cuda:
             X1,X2,Y = X1.to(device),X2.to(device),Y.to(device)
 
+        # Compute forward pass
         Y_hat = model.forward(X1,X2)
+
+        # Calculate training loss
         loss = criterion(Y_hat, Y)
-        optimizer.zero_grad()
+        l2_reg = torch.tensor(0.).to(device)
+        for temp in model.parameters():
+            l2_reg += norm(temp)
+
+        # Perform backprop and zero gradient
+        # optimizer.zero_grad()
         loss.backward()
         optimizer.step()
         optimizer.zero_grad()
-
+        batch_loss.append(loss.item())
         print("EPOCH: %d\t BATCH: %d\tTRAIN LOSS = %f"%(epoch,batch_idx,loss.item()))
+    file_.write(str(loss.item())+"\n")        
 
-    if epoch%5 == 0:
-        checkpoint_path = os.path.join('Model_Baseline_Checkpoints',"epoch" + str(epoch))
-        checkpoint = {'state_dict': model.state_dict(),
-            'optimizer' : optimizer.state_dict()}
+    print (sum(batch_loss) / len(batch_loss))
+    #:wq
+    #for param in model.parameters():
+        #print (param)
+    # Save checkpoint
+    now = datetime.now()
+    checkpoint_str = "_epoch" + str(epoch)
+    checkpoint_path = os.path.join('Model_Baseline_Checkpoints', checkpoint_str)
+    checkpoint = {'state_dict': model.state_dict(),
+                  'optimizer' : optimizer.state_dict()}
 
-        torch.save(checkpoint, checkpoint_path)
+    torch.save(checkpoint, checkpoint_path)
 

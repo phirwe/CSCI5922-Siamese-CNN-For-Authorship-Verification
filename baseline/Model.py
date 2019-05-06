@@ -7,7 +7,8 @@ import numpy as np
 import torch.nn.functional as F
 import torchvision.transforms as transforms
 import pickle
-from Dataset import AuthorsDataset
+import os, sys
+from AuthorsDataset import *
 from torch import optim
 import numpy as np
 import matplotlib.pyplot as plt
@@ -23,11 +24,14 @@ class BaselineNet(nn.Module):
         self.conv2 = nn.Conv2d(32, 64, kernel_size=8, bias=False)
         self.conv3 = nn.Conv2d(64, 64, kernel_size=4, bias=False)
         
-        self.fc1 = nn.Linear(832896, 400)
+        self.fc1 = nn.Linear(421632, 400)
         self.fc2 = nn.Linear(400, 200)
         self.dropout = nn.Dropout(p=0.5)
-        self.fc3 = nn.Linear(200, 2)
-
+        
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                n = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
+                m.weight.data.normal_(0, math.sqrt(2. / n))
     
     def forward(self, x):
 
@@ -41,18 +45,17 @@ class BaselineNet(nn.Module):
         
         x = self.conv3(x)
         x = self.relu(x)
-                
+
         x = x.view(x.size(0), -1)
                 
         x = self.fc1(x)
         x = self.relu(x)
+        
+        x = self.dropout(x)
                 
         x = self.fc2(x)
         x = self.relu(x)
         
-        x = self.dropout(x)
-        x = self.fc3(x)
-        x = self.relu(x)
         
         return x
 
@@ -63,13 +66,12 @@ class BaselineSiamese(nn.Module):
         super(BaselineSiamese, self).__init__()
 
         self.baselineNet = BaselineNet()
-        self.fc1 = nn.Linear(8, 2)
+        self.fc = nn.Linear(200, out_layers)
         self.softmax = nn.Softmax(dim=1)
 
     def forward_once(self, x):
 
         x = self.baselineNet(x)
-        
         return x
 
     def forward(self, x, y):
@@ -77,15 +79,15 @@ class BaselineSiamese(nn.Module):
         # Pass examples through siamese resnet
         f_x = self.forward_once(x)
         f_y = self.forward_once(y)
-
+        #return f_x, f_y
         # Concatenate outputs
         squared_diff = (f_x - f_y)**2
         hadamard = (f_x * f_y)
         x = torch.cat((f_x,f_y,squared_diff,hadamard),1)
 
         # Pass through fully connected layers
-        x = self.fc1(x)
-
+        x = self.fc(x)
         x = self.softmax(x)
+
 
         return x

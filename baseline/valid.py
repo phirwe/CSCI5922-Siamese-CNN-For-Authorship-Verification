@@ -18,6 +18,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-c", "--cuda", action="store_true")
 parser.add_argument("-e", "--epochs", type=int, default=50)
 parser.add_argument("--load_checkpoint", type=str, default=None)
+parser.add_argument("data_path", type=str)
 args = parser.parse_args()
 
 if args.load_checkpoint:
@@ -38,12 +39,13 @@ MAXHEIGHT = 337
 
 valid_dataset = AuthorsDataset(
     root_dir='Dataset',
-    path='train.txt',
+    path=args.data_path,
     transform=transforms.Compose([
         Pad((MAXWIDTH, MAXHEIGHT)),
         Threshold(177),
-        Downsample(0.75),
-        CropWidth(1000)
+        ShiftAndCrop(700, random=True),
+        Downsample(0.75)
+
     ]))
 
 valid_loader = DataLoader(
@@ -53,15 +55,24 @@ valid_loader = DataLoader(
 )
 
 acc = 0
+false_pos = 0
+false_neg = 0
 
 for batch_idx,(X1,X2,Y) in enumerate(valid_loader):
 
     if args.cuda:
         X1,X2,Y = X1.to(device),X2.to(device),Y.to(device)
 
+    # Compute accuracy
     Y_hat = model.forward(X1,X2)
-    #print(Y_hat.argmax(),Y)
-    if Y == Y_hat.argmax():
-        acc += 1
+    _,Y_hat = Y_hat.max(1)
+    acc += (Y_hat == Y).sum().item()
 
-    print(acc/len(valid_dataset))
+    false_pos += (Y_hat[Y_hat > Y]).sum().item()
+    false_neg += (Y[Y_hat < Y]).sum().item()
+
+print("-----------------------------")
+print("VALIDATION ACCURACY: %f\t(%d of %d examples)"%(acc/len(valid_dataset),acc,len(valid_dataset)))
+print("FALSE POSITIVE RATE: %f\t(%d of %d examples)"%(false_pos/len(valid_dataset),false_pos,len(valid_dataset)))
+print("FALSE NEGATIVE RATE: %f\t(%d of %d examples)"%(false_neg/len(valid_dataset),false_neg,len(valid_dataset)))
+print("-----------------------------")
