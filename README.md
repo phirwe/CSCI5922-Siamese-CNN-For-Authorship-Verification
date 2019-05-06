@@ -8,7 +8,7 @@ Project Collaborators:
 - Prathyusha Gayam (prathyusha.gayam@colorado.edu)
 - Payoj Jain (payoj.jain@colorado.edu)
 
-To get started training and testing the network yourself, jump to the [How to run](#how-to-run) section
+To get started training and testing the network yourself right away, jump to the [How to run](#how-to-run) section
 
 ## Overview
 
@@ -25,6 +25,8 @@ To get started training and testing the network yourself, jump to the [How to ru
 ### Training
 
 ### Validation
+
+## References
 
 
 We are a group of 4 students studying in the University of Colorado, Boulder for CSCI 5922: Neural Networks and Deep Learning.
