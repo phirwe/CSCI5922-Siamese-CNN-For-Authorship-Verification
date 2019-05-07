@@ -19,7 +19,43 @@ As an application, we have implemented a Siamese convolutional neural network to
 We also tested fake handwritten generated images, which were generated using Cycle GANs, with the real ones on our model and learned that with more images our model will certainly perform well in differentiating fake from real ones.
 
 ## Network Architectures
-If we talk about basic network structure, two inputs (image A and image B) are fed as inputs to two identical CNNs. The output encodings from these two images are then concatenated, which is then fed to a fully connected layer to get the class scores. 
+If we talk about basic network structure, two inputs (image A and image B) are fed as inputs to two identical CNNs. The output encodings from these two images are then concatenated, which is then fed to a fully connected layer to get the class scores.
+We concatenate to get the following vector, expanding an $n$ output to $4n$:
+$$ v = [\quad a \qquad b \qquad a - b \qquad a \odot b \quad]$$
+This is then fed to a fully connected layer, followed by a softmax layer.
+
+![Basic Siamese Convolutional Net Structure](siamese-net2.png)
+
+### Baseline
+
+This identical network of the Siamese CNN consists of:
+1. Conv layer with 32 filters, followed by ReLU and MaxPool 2x2
+2. Conv layer with 64 filters, followed by ReLU and MaxPool 2x2
+3. Conv layer with 64 filters, followed by ReLU
+4. Fully connected layer with 400 hidden units
+5. Dropout with probability = 0.5
+6. Fully connected layer with 200 hidden units
+7. L2 Regularization
+
+![BaselineSiamese](baseline.png)
+
+### ResNet
+
+This consists of tiny blocks consisting of:
+1. Conv layer
+2. Batch normalization
+3. ReLU
+
+Once the basic building block is built, the following architecture is created:
+
+1. One ResNet unit with 16 filters 
+2. Two ResNet units with filter size 16
+3. Two units of filter size 32 with stride 2
+4. Two units of size 64 with stride 2
+5. Fully connected layer which brings the output to 10 dimensions
+
+![BaselineSiamese](resnet.png)
+
 
 ## Dataset
 We used IAM Handwriting Database (http://www.fki.inf.unibe.ch/databases/iam-handwriting-database) for training and testing. It has various formats for handwritten datasets from 657 writers and 1539 pages of scanned text. The website has not properly specified how they divided the data and which files and folders contain which types of texts written by which author. This was our first challenge that we faced. We have defined the IAM dataset below for future users who may find it difficult to work with this dataset.
