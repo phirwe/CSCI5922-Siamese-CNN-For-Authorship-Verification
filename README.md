@@ -19,7 +19,7 @@ As an application, we have implemented a Siamese convolutional neural network to
 We also tested fake handwritten generated images, which were generated using Cycle GANs, with the real ones on our model and learned that with more images our model will certainly perform well in differentiating fake from real ones.
 
 ## Network Architectures
-If we talk about basic network structure, two inputs (image A and image B) are fed as inputs to two identical CNNs. The output encodings from these two images are then concatenated, which is then fed to a fully connected layer to get the class scores.
+The basic network architectures are adapted from the [Stanford paper](http://cs231n.stanford.edu/reports/2017/pdfs/801.pdf) mentioned above. If we talk about basic network structure, two inputs (image A and image B) are fed as inputs to two identical CNNs. The output encodings from these two images are then concatenated, which is then fed to a fully connected layer to get the class scores.
 We concatenate to get the following vector, expanding an $n$ output to $4n$:
 $$ v = [\quad a \qquad b \qquad a - b \qquad a \odot b \quad] $$
 This is then fed to a fully connected layer, followed by a softmax layer.
