@@ -101,6 +101,8 @@ Refer to [Data Preprocessing](#data-preprocessing) for downloading data and depe
 All package requirements are in `requirements.txt`and can be installed by running `install_dependencies.sh`
 The Authors dataset can be downloaded by running `download_data.sh` in the `Dataset` directory.
 
+`Model_checkpoints/best` is a checkpoint from training 20 epochs on 40,000 training pairs, it is available for testing or as pretraining.
+
 ### Hyperparameters
 
 In `train.py` there are several hyperparameters available to adjust declared at the top of the script 
