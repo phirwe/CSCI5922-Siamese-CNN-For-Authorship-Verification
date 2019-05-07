@@ -61,7 +61,7 @@ Once the basic building block is built, the following architecture is created:
 
 
 ## Dataset
-We used IAM Handwriting Database (http://www.fki.inf.unibe.ch/databases/iam-handwriting-database) for training and testing. It has various formats for handwritten datasets from 657 writers and 1539 pages of scanned text. The website has not properly specified how they divided the data and which files and folders contain which types of texts written by which author. This was our first challenge that we faced. We have defined the IAM dataset below for future users who may find it difficult to work with this dataset.
+We used IAM Handwriting Database (http://www.fki.inf.unibe.ch/databases/iam-handwriting-database) for training and testing. It has various formats for handwritten datasets from 657 writers and 1539 pages of scanned text. The original dataset is not well organized for authorship verification purposes. We have re-organized a subset of the dataset to make author-based tasks mush more efficient. This process is outlined below.
 
 ### IAM handwriting dataset
 
