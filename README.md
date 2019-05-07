@@ -98,7 +98,20 @@ Refer to [Data Preprocessing](#data-preprocessing) for downloading data and depe
 - [PyTorch](https://pytorch.org/get-started/locally/) 
 
 
-All package requirements are in `requirements.txt`
+All package requirements are in `requirements.txt`and can be installed by running `install_dependencies.sh`
+The Authors dataset can be downloaded by running `download_data.sh` in the `Dataset` directory.
+
+### Hyperparameters
+
+In `train.py` there are several hyperparameters available to adjust declared at the top of the script 
+
+- `LEARNING_RATE`:      The initial learning rate for Adam optimization
+- `BATCH_SIZE`:         The minibatch size used during training
+- `THRESHOLD_VALUE`:    The thresholding level for removing scanning artifacts. In a given input image, any pixel value higher than `THRESHOLD_VALUE` will be set to white.
+- `CROP_SIZE`:          The horizontal size to crop input images to. All input images start >= 1000 pixels wide, so `CROP_SIZE` must be < 1000. **NOTE**: Changing this value will require a change to the fully connected layer size of the TinyResnet model. Proceed with caution.
+- `RANDOM_CROP`:        Flag determining whether to crop images from a random location, or starting at 0. For example, if the original image is 1500 pixels wide, `CROP_SIZE` is 700 and `RANDOM_CROP` is True, the result will be a 700 pixel wide window of the original image in a random location.
+- `DOWNSAMPLE_RATE`:    Downsampling ratio to speed up training. Must be between 0 and 1
+
 
 ### Training
 
@@ -112,7 +125,7 @@ After getting data in the appropriate paths, run train scripts either `train.py`
 ### Validation
 
 Once the model finishes training, checkpoints will be stored either in the checkpoints directory. You can use them to test using either `test.py` or `testBaseline.py` with the following flags and arguments:
-  - `-c` for GPU
+  - `-c` or `--cuda` to run on GPU
   - `-e EPOCHS`
   - `data_path` path to the .txt file containing testing pairs
   - `load_checkpoint` with path to the model checkpoint
@@ -127,4 +140,6 @@ Once the model finishes training, checkpoints will be stored either in the check
 - [Signature-verification-using-deep-learning](https://github.com/jadevaibhav/Signature-verification-using-deep-learning.git)
 
 - [Cycle-GAN](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix.git)
+
+- [IAM handwriting database](http://www.fki.inf.unibe.ch/databases/iam-handwriting-database)
 
