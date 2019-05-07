@@ -25,7 +25,7 @@ $$ v = [\quad a \qquad b \qquad a - b \qquad a \odot b \quad] $$
 This is then fed to a fully connected layer, followed by a softmax layer.
 
 
-<img src="siamese-net2.png" data-canonical-src="Basic Siamese Convolutional Net Structure" width="350" height="171" />
+<img src="figures/siamese-net2.png" data-canonical-src="Basic Siamese Convolutional Net Structure" width="350" height="171" />
 
 ### Baseline
 
@@ -38,7 +38,7 @@ This identical network of the Siamese CNN consists of:
 6. Fully connected layer with 200 hidden units
 7. L2 Regularization
 
-<img src="baseline-net.png" data-canonical-src="BaselineSiamese" width="500" height="193" />
+<img src="figures/baseline-net.png" data-canonical-src="BaselineSiamese" width="500" height="193" />
 
 ### ResNet
 
@@ -47,7 +47,7 @@ This consists of tiny blocks consisting of:
 2. Batch normalization
 3. ReLU
 
-<img src="resnet-unit.png" data-canonical-src="ResNet Unit" width="200" height="150" />
+<img src="figures/resnet-unit.png" data-canonical-src="ResNet Unit" width="200" height="150" />
 
 Once the basic building block is built, the following architecture is created:
 
@@ -56,7 +56,7 @@ Once the basic building block is built, the following architecture is created:
 3. Two units of filter size 32 with stride 2
 4. Two units of size 64 with stride 2
 5. Fully connected layer which brings the output to 10 dimensions
-<img src="resnet-arch.png" data-canonical-src="ResNet Architecuture" width="420" height="222" />
+<img src="figures/resnet-arch.png" data-canonical-src="ResNet Architecuture" width="420" height="222" />
 
 
 
