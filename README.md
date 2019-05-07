@@ -11,8 +11,15 @@ Project Collaborators:
 To get started training and testing the network yourself right away, jump to the [How to run](#how-to-run) section
 
 ## Overview
+A Siamese Neural Network is a class of neural network architectures that contain two or more identical sub networks. 'Identical' here means that they have the same configuration with the same parameters and weights. Parameter updating
+is mirrored across both sub networks. It is used to find the similarity of the inputs by comparing its feature vectors.
 
-## Network Architecture
+As an application, we have implemented a Siamese convolutional neural network to determine whether two pieces of handwritten documents are written by the same author or not. While implementing this project, we faces a lot of challenges from organising the dataset to building a model which performs really well for our problem statement. Among all the architectures we tries and trained, ResNetSiamese performed the best. 
+
+We also tested fake handwritten generated images, which were generated using Cycle GANs, with the real ones on our model and learned that with more images our model will certainly perform well in differentiating fake from real ones.
+
+## Network Architectures
+If we talk about basic network structure, two inputs (image A and image B) are fed as inputs to two identical CNNs. The output encodings from these two images are then concatenated, which is then fed to a fully connected layer to get the class scores. 
 
 ## Dataset
 
