@@ -22,6 +22,7 @@ We also tested fake handwritten generated images, which were generated using Cyc
 If we talk about basic network structure, two inputs (image A and image B) are fed as inputs to two identical CNNs. The output encodings from these two images are then concatenated, which is then fed to a fully connected layer to get the class scores. 
 
 ## Dataset
+We used IAM Handwriting Database (http://www.fki.inf.unibe.ch/databases/iam-handwriting-database) for training and testing. It has various formats for handwritten datasets from 657 writers and 1539 pages of scanned text. The website has not properly specified how they divided the data and which files and folders contain which types of texts written by which author. This was our first challenge that we faced. We have defined the IAM dataset below for future users who may find it difficult to work with this dataset.
 
 ### IAM handwriting dataset
 
@@ -39,13 +40,6 @@ If we talk about basic network structure, two inputs (image A and image B) are f
 
 ## References
 
-
-We are a group of 4 students studying in the University of Colorado, Boulder for CSCI 5922: Neural Networks and Deep Learning.
-
-
-Our project is to build a Siamese Convolutional Neural Network for Authorship Verification.
-
-References:
 - [OfflineSignatureVerification](https://github.com/Aftaab99/OfflineSignatureVerification.git)
 
 - [Signature-verification-using-deep-learning](https://github.com/jadevaibhav/Signature-verification-using-deep-learning.git)
