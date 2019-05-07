@@ -93,28 +93,34 @@ Refer to [Data Preprocessing](#data-preprocessing) for downloading data and depe
 
 ### Prerequisites
 
-Python 3
+- Python 3
+- [CUDA](https://developer.nvidia.com/cuda-toolkit) and [cuDNN](https://docs.nvidia.com/deeplearning/sdk/cudnn-install/index.html) for training on GPU
+- [PyTorch](https://pytorch.org/get-started/locally/) 
+
+
 All package requirements are in `requirements.txt`
 
 ### Training
 
 After getting data in the appropriate paths, run train scripts either `train.py` or `trainBaseline.py` with the following flags and arguments:
-  - `-c` for GPU
+  - `-c` or `--cuda` to run on GPU
   - `-e EPOCHS`
   - `--load_checkpoint PATH_TO_MODEL_CHECKPOINT`
-  - `data_path` path to the .txt file containing the pairs
-  - e.g.: `python train.py Dataset/train_100.txt -c -e 50`
+  - `data_path` path to the .txt file containing training pairs
+  - e.g.: `python3 train.py Dataset/train_100.txt -c -e 50`
 
 ### Validation
 
 Once the model finishes training, checkpoints will be stored either in the checkpoints directory. You can use them to test using either `test.py` or `testBaseline.py` with the following flags and arguments:
   - `-c` for GPU
   - `-e EPOCHS`
-  - `data_path` path to the .txt file containing the pairs
+  - `data_path` path to the .txt file containing testing pairs
   - `load_checkpoint` with path to the model checkpoint
-  - e.g.: `python test.py Dataset/train_100.txt Model_Checkpoints/epoch20 -c`
+  - e.g.: `python3 valid.py Dataset/valid_100.txt Model_Checkpoints/epoch20 -c`
 
 ## References
+
+- [Siamese Convolutional Neural Networks for Authorship Verification](http://cs231n.stanford.edu/reports/2017/pdfs/801.pdf)
 
 - [OfflineSignatureVerification](https://github.com/Aftaab99/OfflineSignatureVerification.git)
 
