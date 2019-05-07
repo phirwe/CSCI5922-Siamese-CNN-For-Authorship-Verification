@@ -83,7 +83,7 @@ Now we have our train-test files according to the data preprocessing steps.
 
 ## Results
 
-Our results can be seen in the [results](https://github.com/phirwe/CSCI5922-Siamese-CNN-For-Authorship-Verification/results directory. These include graphs and figures from our models. 
+Our results can be seen in the [results](results) directory. These include graphs and figures from our models. 
 
 To generate a table for accuracy, true positive rate and true negative rate, run test scripts for either of the models.
 
@@ -103,7 +103,7 @@ After getting data in the appropriate paths, run train scripts either `train.py`
   - `-e EPOCHS`
   - `--load_checkpoint PATH_TO_MODEL_CHECKPOINT`
   - `data_path` path to the .txt file containing the pairs
-  - e.g.: `python train.py Dataset/train_100.txt -c -e 50
+  - e.g.: `python train.py Dataset/train_100.txt -c -e 50`
 
 ### Validation
 
