@@ -132,6 +132,12 @@ Once the model finishes training, checkpoints will be stored either in the check
   - `data_path` path to the .txt file containing testing pairs
   - `load_checkpoint` with path to the model checkpoint
   - e.g.: `python3 valid.py Dataset/valid_100.txt Model_Checkpoints/epoch20 -c`
+  
+## GAN
+
+We are using [Cycle-GAN](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix.git). It can be trained and tested using the script `./do_gan_stuff` in the [GAN](GAN) directory.
+
+Once the images are obtained, you can run through the model using the same command mentioned in [Validation](#validation).
 
 ## References
 
