@@ -89,7 +89,7 @@ To generate a table for accuracy, true positive rate and true negative rate, run
 
 ## How to run
 
-Refer to [Data Preprocessing](#data-prepocessing) for downloading data and dependencies. 
+Refer to [Data Preprocessing](#data-preprocessing) for downloading data and dependencies.
 
 ### Prerequisites
 
