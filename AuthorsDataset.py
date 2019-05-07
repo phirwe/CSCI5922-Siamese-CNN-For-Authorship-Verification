@@ -44,9 +44,11 @@ class AuthorsDataset(Dataset):
         # Read images from dataset
         img1 = io.imread(img1_path)
         img2 = io.imread(img2_path)
-
         # Apply transformations
         if self.transform:
+            if len(img2) > 2:
+                img2 = transforms.functional.to_pil_image(img2, mode=None)
+                img2 = np.array(transforms.functional.to_grayscale(img2, num_output_channels=1))
             (img1, img2) = self.transform((img1, img2))
 
         # Convert images to torch tensors
