@@ -74,6 +74,7 @@ We used IAM Handwriting Database (http://www.fki.inf.unibe.ch/databases/iam-hand
 - We do this because ours is a handwriting recognition problem, the more amount of words in the data the better.
 - We have stored this data on a public server [Authors.zip](https://transfer.sh/z8FLg/Authors.zip).
     - Download this along with the dependencies by running `./install_dependencies.sh`
+    - **UPDATE**: The preprocessed data is no longer available.
 3. Once we get the top 100 authors, we generate the training data using `create_pairs.py`. This divides images randomly into pairs.
 - author1 author2 1/0 --> `1 if author1 == author2 else 0`
 4. We now have our `train.txt` files according to various sizes.
